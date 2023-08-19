@@ -17,6 +17,7 @@ NATURAL JOIN locations;
 
 /*
 USING 절로 조인
+    명시적으로 결합을 수행하고자하는 열을 정해줍니다.
 */
 SELECT employee_id, last_name,
         location_id, department_id
