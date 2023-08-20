@@ -1,4 +1,3 @@
---
 -- Copyright (c) Oracle Corporation 1988, 1999.  All Rights Reserved.
 --
 --  NAME
