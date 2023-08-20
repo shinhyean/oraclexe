@@ -2,6 +2,10 @@
 데이터 딕셔너리란?
     데이터 딕셔너리는 데이터베이스 내부의 메타데이터를 관리하는 시스템 테이블과 뷰의 집합입니다.
     이를 통해 데이터베이스 객체와 속성에 대한 정보를 조회하고 모니터링할 수 있습니다.
+    주 목적은 모니터링 있다.
+    코멘트도 뽑아 볼 수도 있다.
+    
+    *****기본적으로는 관리자 권한이 부여 되어있는 데에서 실행이 가능한다.*****
     
     USER_: 현재 사용자의 스키마에 대한 정보만 포함하는 뷰입니다.
     ALL_: 현재 사용자가 접근 가능한 모든 스키마의 정보를 포함하는 뷰입니다.
@@ -65,11 +69,11 @@ FROM v$version
 WHERE banner LIKE 'Oracle%';
 
 -- v$process: 프로세스 정보 조회
-SELECT spid, osuser, program, terminal
+SELECT *
 FROM v$process;
 
 -- v$lock: 락 정보 조회
-SELECT session_id, type, mode, block, ctime
+SELECT *
 FROM v$lock
 WHERE block = 1;
 
@@ -125,7 +129,6 @@ WHERE
   AND a.sql_address=b.address
   AND a.paddr=c.addr
   AND a.status='ACTIVE';
-
 
 --유저 세션 KILL
 ALTER SYSTEM KILL SESSION 'SID,시리얼번호';
