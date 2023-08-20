@@ -1,4 +1,6 @@
 /*
+DBMS_TUNING 계정에 로그인 한다음에 DBMS_TUNING에서 실행시키기
+
 SQL tuning tools
 
 실행계획 읽기
@@ -20,6 +22,7 @@ WHERE d.deptno = e.deptno
 AND e.sal >= 3000
 ORDER BY e.ename;
 
+-- 옵티마이저(ai)가 코스트 및 실행 계획이다. 
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
 /*
@@ -27,20 +30,27 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 SQL*Plus에서 사용되며, 쿼리의 실행 계획과 성능에 관한 통계를 생성합니다.
 디스크 읽기, 메모리 읽기 등의 성능 통계 정보를 제공합니다.
 
-
+자동 추적 사용
+실행 계획과 명령문 통계를 표시합니다.
 */
+--자동 추적 사용
+--실행 계획과 명령문 통계를 표시합니다.
 SET AUTOTRACE ON;
 
+-- 드래그 한다음에 스크립트 실행 버튼(F5)을 누른다.
 SELECT d.dname, e.ename
 FROM dept d, emp e
 WHERE d.deptno = e.deptno
 AND e.sal >= 3000
 ORDER BY e.ename;
 
+/*
+자동 추적 사용
+실행 계획과 명령문 통계를 표시합니다.
+*/
 SET AUTOTRACE OFF;
 
 /*
-
 3. V$SQL_PLAN
 실행된 SQL 문과 공유 풀에 여전히 있는 SQL 문의 실행 계획에 관한 정보를 포함하는 뷰입니다.
 DBMS_XPLAN 패키지 메소드를 사용하여 실행 계획을 표시할 수 있습니다.
@@ -52,10 +62,6 @@ GRANT SELECT ON V_$SESSION TO tuning;
 GRANT SELECT ON V_$SQL_PLAN_STATISTICS_ALL TO tuning;
 GRANT SELECT ON V_$SQL TO tuning;
 GRANT SELECT ANY DICTIONARY TO tuning;
-
-
-
-
 */
 -- 통계 캡처레벨
 ALTER SYSTEM SET STATISTICS_LEVEL = ALL;
@@ -67,5 +73,6 @@ AND e.sal >= 3000
 AND e.deptno = d.deptno
 ORDER BY e.ename;
 
+-- 최근 실행계획을 출력
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST -ROWS'));
 

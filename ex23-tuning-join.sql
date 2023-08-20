@@ -9,6 +9,7 @@ NESTED LOOPS
     조인 되는 후행 테이블의 조인 컬럼에 인덱스가 존재해야 함.
     인덱스가 없으면 후행 테이블을 반복적으로 FULL TABLE SCAN하므로 비효율적
 
+**힌트에 데이터가 적은 테이블은 왼쪽으로 두기**
 */
 
 CREATE INDEX emp_deptno_idx ON emp(deptno);
@@ -63,11 +64,18 @@ Hash JOIN 사용기준
     수행 빈도가 낮고
     쿼리 수행 시간이 오래 걸리는
     대량 데이터 조인할 때
+    대량의 데이터를 처리할때 사용 하면 좋다.
+
+집계나 통계할때 사용하면 좋다.
+
+단점
+메모리 공간이 하나더 필요(데이터가 많으면 많을수록 메로리 공간이 더 필요하다.)
+cpu 사용량이 높다. 하루 통계나 집계 아니면 일주일 통계나 집계가 할때 좋다.
 */
 
 SELECT /*+ USE_HASH(e d) */
     e.ename, d.dname
 FROM emp e INNER JOIN dept d
-ON (e.deptno = d.deptno);
+ON (e.deptno = d.deptno); -- = 값으로 처리해야 한다.
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 

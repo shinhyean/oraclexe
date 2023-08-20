@@ -1,4 +1,6 @@
 /*
+DBMS_TUNING 계정에 로그인 한다음에 DBMS_TUNING에서 실행시키기
+
 INDEX UNIQUE SCAN
 : 고유 인덱스가 정의된 컬럼이 조건절에서 '='로 비교되는 경우
 : 그 외의 경우는 전부 INDEX RANGE SCAN이 발생
@@ -7,9 +9,10 @@ INDEX UNIQUE SCAN
 SELECT *
 FROM products
 WHERE prodno = 11000;
+
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
-
+-- 최대한 힌트 쓰지 말기
 SELECT /*+ FULL(p) */ *
 FROM products p
 WHERE prodno = 11000;
@@ -24,6 +27,7 @@ FULL TABLE SCAN
 : DB_FILE_MULTIBLOCK_READ_COUNT 파라메터로 한 번에 읽어야 할 블록의 개수를 지정
 
 */
+
 SHOW PARAMETER DB_FILE_MULTIBLOCK_READ_COUNT;
 
 SELECT * FROM orderdetails;
@@ -36,8 +40,10 @@ INDEX RANGE SCAN
 : 고유 인덱스가 정의된 컬럼이 조건절에서 '=' 비교 연산자를 제외한 모든 연산자로 비교되는 경우
 : 비고유 인덱스가 정의된 컬럼이 조건절에 기술되는 경우
 */
+-- price 인덱스 만들기
+CREATE INDEX products_price_idx ON products(price); 
 
-CREATE INDEX products_price_idx ON products(price);
+-- 인덱스 삭제
 DROP INDEX products_price_idx;
 
 SELECT *
@@ -66,7 +72,9 @@ INDEX RANGE SCAN(MIN/MAX)
 */
 
 DROP INDEX products_idx;
-CREATE INDEX products_idx ON products(psize, price);
+
+-- 복합인덱스, 결합인덱스
+CREATE INDEX products_idx ON products(psize, price); 
 
 
 SELECT /*+ INDEX(products products_idx) */ MAX(price) FROM products
@@ -82,7 +90,7 @@ CREATE INDEX products_price_idx ON products(price);
 
 SELECT /*+ INDEX(products products_price_idx) */ * 
 FROM products
-WHERE TRUNC(price) BETWEEN 3350 AND 4500;
+WHERE TRUNC(price) BETWEEN 3350 AND 4500; -- TRUNC 때문에 어쩔수 없이 풀 스켄을 하고있다. TRUNC 함수는 주로 소수점 절사 및 날짜의 시간을 없앨 때 사용한다.
 
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
@@ -107,23 +115,29 @@ SELECT /*+ FULL(orders) */ MAX(orderdate)
 FROM orders
 WHERE custno BETWEEN 1 AND 100;
 
+-- 33433
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
 
 SELECT /*+ INDEX(orders orders_custno_idx) */ MAX(orderdate)
 FROM orders
 WHERE custno BETWEEN 1 AND 100;
+--957
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
 
 SELECT /*+ FULL(orders) */ MAX(orderdate)
 FROM orders
-WHERE custno BETWEEN 1 AND 5000;
+WHERE custno BETWEEN 1 AND 20000;
+
+--33433
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
 SELECT /*+ INDEX(orders orders_custno_idx) */ MAX(orderdate)
 FROM orders
-WHERE custno BETWEEN 1 AND 5000;
+WHERE custno BETWEEN 1 AND 20000;
+
+-- 100k(십만개)
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(NULL, NULL, 'ALLSTATS LAST'));
 
 
@@ -132,8 +146,11 @@ INDEX FAST FULL SCAN
 : INDEX FULL SCAN은 인덱스에 포함되지 않은 컬럼이 SQL에 포함되어 있을 때도 발생하지만
   INDEX FAST FULL SCAN은 인덱스에 포함된 컬럼들만 SQL에 사용되었을 때 발생
 : Multi Block I/O에 의해 리프 블록에 접근하므로, 데이터의 출력 순서를 보장하지 않음
+-- 빠른대신 정렬 않됨
+모든 컬럼이 인덱스화 되어 있을때 사용가능
 */
-CREATE INDEX emp_idx on emp(job, hiredate, deptno);
+-- 결합 인덱스
+CREATE INDEX emp_idx on emp(job, hiredate, deptno); 
 
 SELECT /*+ INDEX_FFS(e emp_idx) */ TO_CHAR(hiredate, 'YYYYMM') yyyymm, COUNT(deptno) total
 FROM emp e

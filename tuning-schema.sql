@@ -1,3 +1,4 @@
+--DBMS_HR_SYS 계정에서 실행시키기
 ALTER SESSION SET "_ORACLE_SCRIPT"=true;
 
 DROP USER tuning CASCADE; 
