@@ -97,7 +97,8 @@ EXEC print_hello_proc;
 
 /*
 IN 매개변수
-    값이 프로시저  안으로 들어감
+    값이 프로시저 안으로 들어감
+    프로시저 실행에 필요한 값을 직접 입력받는 형식의 파라미터 지정 방식입니다.
 */
 CREATE TABLE emp2 AS
 SELECT employee_id empno, last_name name, salary, department_id depno
@@ -118,11 +119,14 @@ select * from emp2
 WHERE empno = 115;
 
 -- salary : 3410
-EXEC update_emp_salary_proc(115); -- depno 컬럼의 값을 eno에 저장 그다음에 내가 만든 프로시저로 가서 BEGIN 실행
+-- 여기서 115라는 값을 입력받음
+-- depno 컬럼의 값을 eno에 저장 그다음에 내가 만든 프로시저로 가서 BEGIN 실행
+EXEC update_emp_salary_proc(115); 
 
 /*
 OUT 매개변수
     프로시저의 반환값이 없으므로 OUT 매개변수로 값을 받을 수 있다.
+    프로시저 실행 후 호출한 프로그램으로 값을 반환 받을수 있는 방식입니다.
     참조형 매개변수와 비슷
 */
 CREATE OR REPLACE PROCEDURE find_emp_proc(v_eno IN NUMBER, 
