@@ -40,9 +40,11 @@ SELECT * FROM salvu50
 WHERE ann_salary >= 50000;
 
 CREATE VIEW salvu_hangle
-AS SELECT employee_id AS ID_NUMBER, last_name name, salary*12 ANN_SALARY
+AS SELECT employee_id 아이디, last_name 이름, salary*12 연봉
     FROM employees
     WHERE department_id = 50;
+    
+SELECT * FROM salvu_hangle;
 
 -- 뷰 수정 (AS를 않쓰고 가로안에서 처리했다.)
 CREATE OR REPLACE VIEW empvu80
