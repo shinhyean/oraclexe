@@ -120,7 +120,7 @@ WHERE empno = 115;
 
 -- salary : 3410
 -- 여기서 115라는 값을 입력받음
--- depno 컬럼의 값을 eno에 저장 그다음에 내가 만든 프로시저로 가서 BEGIN 실행
+-- depno 컬럼의 값을 eno에 저장 그다음에 내가 만든 프로시저로 가서 BEGIN 실행한다.
 EXEC update_emp_salary_proc(115); 
 
 /*
@@ -130,7 +130,7 @@ OUT 매개변수
     참조형 매개변수와 비슷
 */
 CREATE OR REPLACE PROCEDURE find_emp_proc(v_eno IN NUMBER, 
-        v_fname OUT NVARCHAR2, v_lname OUT NVARCHAR2, v_sal OUT NVARCHAR2) -- 
+        v_fname OUT NVARCHAR2, v_lname OUT NVARCHAR2, v_sal OUT NVARCHAR2)
 IS
     BEGIN
         SELECT first_name, last_name, salary
@@ -145,9 +145,9 @@ VARIABLE v_lname NVARCHAR2(25);
 VARIABLE v_sal NUMBER;
 
 EXEC find_emp_proc(115, :v_fname, :v_lname, :v_sal);
-PRINT v_fname;
-PRINT v_lname;
-PRINT v_sal;
+PRINT v_fname; -- 출력문 (System.out.println 자바의 출력문과 같다.)
+PRINT v_lname; -- 출력문 (System.out.println 자바의 출력문과 같다.)
+PRINT v_sal;   -- 출력문 (System.out.println 자바의 출력문과 같다.)
 
 /*
 IN OUT 매개변수
